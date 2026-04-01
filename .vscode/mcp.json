@@ -1,0 +1,24 @@
+{
+  // MCP (Model Context Protocol) server configuration
+  // 
+  // This file configures MCP servers for AI-assisted development and testing.
+  // Compatible with VS Code (GitHub Copilot Agent Mode), Cursor, Claude Desktop, and more.
+  //
+  // @see https://playwright.dev/docs/getting-started-mcp
+  // @see https://angular.dev/ai/mcp
+  "servers": {
+    // Playwright MCP: enables AI agents to automate and inspect browsers
+    // using the accessibility tree — no screenshots required.
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"]
+    },
+    // Angular CLI MCP: provides Angular-specific tooling to AI agents
+    // (component generation, build info, route inspection, etc.)
+    "angular-cli": {
+      "command": "npx",
+      "args": ["-y", "@angular/cli", "mcp"],
+      "cwd": "${workspaceFolder}/angular-app"
+    }
+  }
+}

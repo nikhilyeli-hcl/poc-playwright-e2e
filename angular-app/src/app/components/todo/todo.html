@@ -1,0 +1,81 @@
+<section class="todo-app">
+  <header class="todo-header">
+    <h1>Todo App</h1>
+    <div class="todo-input-row">
+      <input
+        class="todo-input"
+        type="text"
+        placeholder="What needs to be done?"
+        [(ngModel)]="newTodoText"
+        (keyup.enter)="addTodo()"
+        data-testid="todo-input"
+        aria-label="New todo"
+      />
+      <button class="btn btn-primary" (click)="addTodo()" data-testid="add-todo-btn">
+        Add
+      </button>
+    </div>
+  </header>
+
+  <section class="todo-filters" aria-label="Filter todos">
+    <button
+      class="filter-btn"
+      [class.active]="filter === 'all'"
+      (click)="setFilter('all')"
+      data-testid="filter-all"
+    >
+      All
+    </button>
+    <button
+      class="filter-btn"
+      [class.active]="filter === 'active'"
+      (click)="setFilter('active')"
+      data-testid="filter-active"
+    >
+      Active
+    </button>
+    <button
+      class="filter-btn"
+      [class.active]="filter === 'completed'"
+      (click)="setFilter('completed')"
+      data-testid="filter-completed"
+    >
+      Completed
+    </button>
+  </section>
+
+  <ul class="todo-list" data-testid="todo-list">
+    @if (filteredItems.length === 0) {
+      <li class="todo-empty">No todos to show.</li>
+    }
+    @for (item of filteredItems; track item.id) {
+      <li class="todo-item" [class.completed]="item.completed" [attr.data-testid]="'todo-item-' + item.id">
+        <input
+          type="checkbox"
+          [checked]="item.completed"
+          (change)="toggleTodo(item)"
+          [attr.aria-label]="'Toggle ' + item.text"
+          [attr.data-testid]="'todo-checkbox-' + item.id"
+        />
+        <span class="todo-text">{{ item.text }}</span>
+        <button
+          class="btn btn-danger btn-sm"
+          (click)="deleteTodo(item.id)"
+          [attr.aria-label]="'Delete ' + item.text"
+          [attr.data-testid]="'todo-delete-' + item.id"
+        >
+          ✕
+        </button>
+      </li>
+    }
+  </ul>
+
+  <footer class="todo-footer">
+    <span data-testid="remaining-count">{{ remainingCount }} item{{ remainingCount !== 1 ? 's' : '' }} left</span>
+    @if (items.length > remainingCount) {
+      <button class="btn btn-link" (click)="clearCompleted()" data-testid="clear-completed">
+        Clear completed
+      </button>
+    }
+  </footer>
+</section>

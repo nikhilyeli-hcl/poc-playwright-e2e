@@ -1,9 +1,14 @@
 {
   // For more information, visit: https://angular.dev/ai/mcp
   "servers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"]
+    },
     "angular-cli": {
       "command": "npx",
       "args": ["-y", "@angular/cli", "mcp"]
+      // "cwd": "${workspaceFolder}/angular-app"
     }
   }
 }

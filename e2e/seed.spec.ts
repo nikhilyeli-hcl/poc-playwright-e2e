@@ -7,15 +7,18 @@ test.describe('Todo App - overall e2e flow', () => {
     await expect(page.getByRole('heading', { name: 'Todo App' })).toBeVisible();
     await expect(page.getByTestId('remaining-count')).toContainText('2 items left');
 
-    const taskName = 'Run complete app e2e flow';
+    const testTaskName = 'Run complete app e2e flow';
 
-    await page.getByTestId('todo-input').fill(taskName);
+    await page.getByTestId('todo-input').fill(testTaskName);
     await page.getByTestId('add-todo-btn').click();
-    await expect(page.getByText(taskName)).toBeVisible();
+    await expect(page.getByText(testTaskName)).toBeVisible();
     await expect(page.getByTestId('remaining-count')).toContainText('3 items left');
 
-    const deleteButton = page.getByRole('button', { name: `Delete ${taskName}` });
-    const itemId = (await deleteButton.getAttribute('data-testid'))?.replace('todo-delete-', '');
+    const deleteButton = page.getByRole('button', { name: `Delete ${testTaskName}` });
+    const deleteButtonTestId = await deleteButton.getAttribute('data-testid');
+    expect(deleteButtonTestId).toMatch(/^todo-delete-\d+$/);
+
+    const itemId = deleteButtonTestId.replace('todo-delete-', '');
     expect(itemId).toMatch(/^\d+$/);
 
     const createdItem = page.getByTestId(`todo-item-${itemId}`);
@@ -26,9 +29,9 @@ test.describe('Todo App - overall e2e flow', () => {
     await expect(page.getByTestId('remaining-count')).toContainText('2 items left');
 
     await page.getByTestId('filter-completed').click();
-    await expect(page.getByText(taskName)).toBeVisible();
+    await expect(page.getByText(testTaskName)).toBeVisible();
 
     await page.getByTestId('clear-completed').click();
-    await expect(page.getByText(taskName)).toHaveCount(0);
+    await expect(page.getByText(testTaskName)).toHaveCount(0);
   });
 });

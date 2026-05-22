@@ -16,10 +16,12 @@ test.describe('Todo App - overall e2e flow', () => {
 
     const deleteButton = page.getByRole('button', { name: `Delete ${taskName}` });
     const itemId = (await deleteButton.getAttribute('data-testid'))?.replace('todo-delete-', '');
-    expect(itemId).toBeTruthy();
+    expect(itemId).toMatch(/^\d+$/);
 
     const createdItem = page.getByTestId(`todo-item-${itemId}`);
-    await createdItem.getByRole('checkbox').check();
+    const createdItemCheckbox = createdItem.getByRole('checkbox');
+    await createdItemCheckbox.check();
+    await expect(createdItemCheckbox).toBeChecked();
     await expect(createdItem).toHaveClass(/completed/);
     await expect(page.getByTestId('remaining-count')).toContainText('2 items left');
 

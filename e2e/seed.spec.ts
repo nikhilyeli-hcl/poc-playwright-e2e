@@ -14,7 +14,9 @@ test.describe('Todo App - overall e2e flow', () => {
     await expect(page.getByText(taskName)).toBeVisible();
     await expect(page.getByTestId('remaining-count')).toContainText('3 items left');
 
-    const createdItem = page.getByTestId('todo-list').locator('li', { hasText: taskName });
+    const createdItem = page
+      .getByTestId('todo-list')
+      .locator('li', { has: page.getByRole('button', { name: `Delete ${taskName}` }) });
     await createdItem.getByRole('checkbox').check();
     await expect(createdItem).toHaveClass(/completed/);
     await expect(page.getByTestId('remaining-count')).toContainText('2 items left');

@@ -16,6 +16,9 @@ test.describe('Todo App - overall e2e flow', () => {
 
     const deleteButton = page.getByRole('button', { name: `Delete ${testTaskName}` });
     const deleteButtonTestId = await deleteButton.getAttribute('data-testid');
+    if (!deleteButtonTestId) {
+      throw new Error('Expected delete button to have a data-testid attribute');
+    }
     expect(deleteButtonTestId).toMatch(/^todo-delete-\d+$/);
 
     const itemId = deleteButtonTestId.replace('todo-delete-', '');

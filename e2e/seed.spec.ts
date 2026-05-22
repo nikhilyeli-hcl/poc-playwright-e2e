@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Todo App - overall e2e flow', () => {
   test('should complete a full user journey across add, complete, filter, and clear', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
 
     await expect(page.getByRole('heading', { name: 'Todo App' })).toBeVisible();
     await expect(page.getByTestId('remaining-count')).toContainText('2 items left');
@@ -14,9 +14,11 @@ test.describe('Todo App - overall e2e flow', () => {
     await expect(page.getByText(taskName)).toBeVisible();
     await expect(page.getByTestId('remaining-count')).toContainText('3 items left');
 
-    const createdItem = page
-      .getByTestId('todo-list')
-      .locator('li', { has: page.getByRole('button', { name: `Delete ${taskName}` }) });
+    const deleteButton = page.getByRole('button', { name: `Delete ${taskName}` });
+    const itemId = (await deleteButton.getAttribute('data-testid'))?.replace('todo-delete-', '');
+    expect(itemId).toBeTruthy();
+
+    const createdItem = page.getByTestId(`todo-item-${itemId}`);
     await createdItem.getByRole('checkbox').check();
     await expect(createdItem).toHaveClass(/completed/);
     await expect(page.getByTestId('remaining-count')).toContainText('2 items left');
